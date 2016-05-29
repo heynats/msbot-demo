@@ -1,0 +1,32 @@
+{
+  "name": "msbot-demo",
+  "version": "0.1.0",
+  "description": "Testing Microsoft Bot Framework with Slack integration.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/istanleyy/msbot-demo.git"
+  },
+  "keywords": [
+    "microsoft",
+    "bot",
+    "framework",
+    "node",
+    "js",
+    "slack"
+  ],
+  "author": "Stanley Yeh <ihyeh@mosi.com.tw>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/istanleyy/msbot-demo/issues"
+  },
+  "homepage": "https://github.com/istanleyy/msbot-demo",
+  "dependencies": {
+    "botbuilder": "^1.0.0",
+    "botkit": "^0.2.0",
+    "restify": "^4.1.0"
+  }
+}
