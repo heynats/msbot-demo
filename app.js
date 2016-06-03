@@ -1,5 +1,7 @@
 var Botkit = require('botkit');
 var builder = require('botbuilder');
+var request = require('request');
+var prompts = require('./prompts');
 
 var controller = Botkit.slackbot();
 var bot = controller.spawn({
@@ -12,14 +14,34 @@ var dialog = new builder.CommandDialog();
 slackBot.add('/', dialog);
 
 dialog.onDefault( function(session) {
-    session.send('Hello, another fine day in the making! How may I help you?');
+    request({
+        url: 'https://slack.com/api/users.info',
+        qs: { token: process.env.token, user: session.userData.id},
+        method: 'GET'
+    }, function(error, response, body) {
+        if(error) {
+            console.log(error)
+        } else {
+            var result = JSON.parse(body)
+            if(!result.ok) {
+                session.send(prompts.greeting, 'stranger');
+            } else {
+                session.send(prompts.greeting, result.user.profile.first_name);
+            }
+        }
+    });
 });
 
-dialog.matches('status', builder.DialogAction.send('You are asking for current production status.'));
+dialog.matches('\\bhelp\\b', builder.DialogAction.send(prompts.helpMsg));
 
-dialog.matches('performance', builder.DialogAction.send('You are asking for station performance.'));
+dialog.matches('\\bstatus\\b', function(session) {
+    
+    session.send('You are asking for current production status.');
+});
 
-dialog.matches('schedule', builder.DialogAction.send('You are asking for on-time schedule.'));
+dialog.matches('\\bperformance\\b', builder.DialogAction.send('You are asking for station performance.'));
+
+dialog.matches('\\bschedule\\b', builder.DialogAction.send('You are asking for on-time schedule.'));
 
 slackBot.listenForMentions();
 
