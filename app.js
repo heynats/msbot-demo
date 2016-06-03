@@ -7,13 +7,23 @@ var bot = controller.spawn({
 });
 
 var slackBot = new builder.SlackBot(controller, bot);
-slackBot.add('/', function(session) {
-    session.send('Hello team, another fine day in the making!');
+var dialog = new builder.CommandDialog();
+
+slackBot.add('/', dialog);
+
+dialog.onDefault( function(session) {
+    session.send('Hello, another fine day in the making! How may I help you?');
 });
+
+dialog.matches('status', builder.DialogAction.send('You are asking for current production status.'));
+
+dialog.matches('performance', builder.DialogAction.send('You are asking for station performance.'));
+
+dialog.matches('schedule', builder.DialogAction.send('You are asking for on-time schedule.'));
 
 slackBot.listenForMentions();
 
-bot.startRTM(function(err, bot, payload) {
+bot.startRTM( function(err, bot, payload) {
     if(err) {
         throw new Error('Could not connect to Slack!');
     }
