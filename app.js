@@ -1,7 +1,8 @@
-var Botkit = require('botkit');
-var builder = require('botbuilder');
-var request = require('request');
-var prompts = require('./prompts');
+const Botkit = require('botkit');
+const builder = require('botbuilder');
+const request = require('request');
+const sprintf = require('sprintf-js').sprintf;
+const prompts = require('./prompts');
 
 var controller = Botkit.slackbot();
 var bot = controller.spawn({
@@ -20,7 +21,7 @@ dialog.onDefault( function(session) {
         method: 'GET'
     }, function(error, response, body) {
         if(error) {
-            console.log(error)
+            console.log(error);
         } else {
             var result = JSON.parse(body)
             if(!result.ok) {
@@ -34,10 +35,48 @@ dialog.onDefault( function(session) {
 
 dialog.matches('\\bhelp\\b', builder.DialogAction.send(prompts.helpMsg));
 
-dialog.matches('\\bstatus\\b', function(session) {
-    
-    session.send('You are asking for current production status.');
-});
+dialog.matches('\\bstatus\\b', [
+    function(session) {
+        request({
+            url: 'http://demo.mosi.com.tw:3003/bot/question1',
+            method: 'GET'
+        }, function(error, response, body) {
+            if(error) {
+                console.log(error);
+            } else {
+                if(response.statusCode !== 200) {
+                    session.send(prompts.generalError);
+                    console.log(body);
+                } else {
+                    var result = JSON.parse(body);
+                    console.log(result);
+                    if(typeof result.expDown !== 'undefined' && result.expDown) {
+                        session.send(prompts.answerStatusBreak, result);
+                    } else {
+                        session.dialogData.machineList = result.list;
+                        builder.Prompts.text(session, sprintf(prompts.answerStatus, result));
+                    }
+                }
+            }
+        });
+    },
+    function(session, results) {
+        if(results.response && results.response == 'detail') {
+            if(session.dialogData.machineList.length == 0) {
+                session.send("I haven't heard any problems from the machines.");
+            } else {
+                var reply = 'Here are the problematic machines:\n';
+                for(var id in session.dialogData.machineList) {
+                    var key = Object.keys(session.dialogData.machineList[id])[0];
+                    reply += "* " + key + ": " + session.dialogData.machineList[id][key] + "\n";
+                }
+                session.send(reply);
+            }
+        } else {
+            session.send(prompts.abort);
+        }
+    }
+]);
 
 dialog.matches('\\bperformance\\b', builder.DialogAction.send('You are asking for station performance.'));
 

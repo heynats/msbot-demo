@@ -6,8 +6,10 @@ module.exports = {
     "\nSay 'nevermind' during our conversation to let me back to work!",
     greeting: "Hi %s, how may I help you?",
     abort: "Sure, glad to help.",
-    answerStatus: "%(up)% of your machines are in production, and %(normal)% of those machines are running normally.",
-    answerStatusBreak: "We are having a break from %(duration).",
+    generalError: "Sorry I'm having trouble retrieving information...",
+    answerStatus: "%(production)f%% of the machines are working on assigned jobs, and %(normal)f%% of those machines are running normally.\n" +
+    "Say _detail_ for a list of problematic machines.",
+    answerStatusBreak: "We are having a break from %(expDown)s.",
     answerPerformance: "",
     answerSchedule: "",
 }
