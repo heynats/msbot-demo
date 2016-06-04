@@ -10,6 +10,6 @@ module.exports = {
     answerStatus: "%(production)f%% of the machines are working on assigned jobs, and %(normal)f%% of those machines are running normally.\n" +
     "Say _detail_ for a list of problematic machines.",
     answerStatusBreak: "We are having a break from %(expDown)s.",
-    answerPerformance: "",
+    answerPerformance: "OEE of the requested period was %(oee)f%% (Availability: %(availability)f%%; Speed: %(speed)f%%; Quality: %(quality)f%%).",
     answerSchedule: "",
 }

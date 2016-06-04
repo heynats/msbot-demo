@@ -17,7 +17,7 @@ slackBot.add('/', dialog);
 dialog.onDefault( function(session) {
     request({
         url: 'https://slack.com/api/users.info',
-        qs: { token: process.env.token, user: session.userData.id},
+        qs: { token: process.env.token, user: session.userData.id },
         method: 'GET'
     }, function(error, response, body) {
         if(error) {
@@ -78,7 +78,7 @@ dialog.matches('\\bstatus\\b', [
     }
 ]);
 
-dialog.matches('\\bperformance\\b', builder.DialogAction.send('You are asking for station performance.'));
+dialog.matches('\\bperformance\\b', askStationPerformance);
 
 dialog.matches('\\bschedule\\b', builder.DialogAction.send('You are asking for on-time schedule.'));
 
@@ -89,3 +89,25 @@ bot.startRTM( function(err, bot, payload) {
         throw new Error('Could not connect to Slack!');
     }
 });
+
+function askStationPerformance(session, args) {
+    console.log(args)
+    request({
+        url: 'http://demo.mosi.com.tw:3003/bot/question2',
+        qs: { station: 'TestPanel6', time: 'today' },
+        method: 'GET'
+    }, function(error, response, body) {
+        if(error) {
+            console.log(error);
+        } else {
+            console.log(body);
+            if(response.statusCode !== 200 || body.slice(0,11) == 'serverError') {
+                session.send(prompts.generalError);
+            } else {
+                //var result = JSON.parse(body);
+                //console.log(result);
+                session.send('ok');
+            }
+        }
+    });
+}
