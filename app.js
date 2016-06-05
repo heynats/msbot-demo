@@ -197,11 +197,15 @@ function detailFollowup(field) {
                             session.send(prompts.generalError);
                         } else {
                             var result = JSON.parse(body);
-                            var reply = 'Here are the top 3 reasons for efficiency losses:\n';
-                            for(var i in result.reasonList) {
-                                reply += "* " + result.reasonList[i] + "\n";
+                            if(result.list && result.list.length > 0) {
+                                var reply = 'Here are the top 3 reasons for efficiency losses:\n';
+                                for(var i in result.reasonList) {
+                                    reply += "* " + result.reasonList[i] + "\n";
+                                }
+                                session.send(reply);
+                            } else {
+                                session.send("I haven't received any problem report from the machines yet.");
                             }
-                            session.send(reply);
                         }
                     }
                 });
@@ -222,11 +226,15 @@ function detailFollowup(field) {
                             session.send(prompts.generalError);
                         } else {
                             var result = JSON.parse(body);
-                            var reply = 'Here are the top 3 reasons for efficiency losses:\n';
-                            for(var i in result.reasonList) {
-                                reply += "* " + result.reasonList[i] + "\n";
+                            if(result.reasonList && result.reasonList.length > 0) {
+                                var reply = 'Here are the top 3 reasons for efficiency losses:\n';
+                                for(var i in result.reasonList) {
+                                    reply += "* " + result.reasonList[i] + "\n";
+                                }
+                                session.send(reply);
+                            } else {
+                                session.send("I haven't received any problem report from the machines yet.");
                             }
-                            session.send(reply);
                         }
                     }
                 });
