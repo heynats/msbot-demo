@@ -197,7 +197,7 @@ function detailFollowup(field) {
                             session.send(prompts.generalError);
                         } else {
                             var result = JSON.parse(body);
-                            if(result.list && result.list.length > 0) {
+                            if(result.list.length > 0) {
                                 var reply = 'Here are the top 3 reasons for efficiency losses:\n';
                                 for(var i in result.reasonList) {
                                     reply += "* " + result.reasonList[i] + "\n";
@@ -226,7 +226,7 @@ function detailFollowup(field) {
                             session.send(prompts.generalError);
                         } else {
                             var result = JSON.parse(body);
-                            if(result.reasonList && result.reasonList.length > 0) {
+                            if(result.reasonList.length > 0) {
                                 var reply = 'Here are the top 3 reasons for efficiency losses:\n';
                                 for(var i in result.reasonList) {
                                     reply += "* " + result.reasonList[i] + "\n";
