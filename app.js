@@ -95,7 +95,11 @@ bot.startRTM( function(err, bot, payload) {
 function askStationPerformance(session, args) {
     var param = args.matches['input'].trim().split(' ');
     session.dialogData.stationName = param[0];
-    session.dialogData.period = param[2];
+    if(param.length > 3) {
+        session.dialogData.period = param[2] + param[3];
+    } else {
+        session.dialogData.period = param[2];
+    }
     
     request({
         url: 'http://demo.mosi.com.tw:3003/bot/question2',
@@ -130,7 +134,7 @@ function askSchedule(session, args) {
                 var reply = sprintf(prompts.answerSchedule, result);
                 
                 if(result.delayMaster && result.delayMaster.length > 0) {
-                    var appendTxt = 'Below are the delayed jobs:\n';
+                    var appendTxt = '\nBelow are the delayed jobs, say _losses_ with job ID to find out reasons:\n';
                     for(var i in result.delayMaster) {
                         appendTxt += "* " + result.delayMaster[i] + "\n";
                     }
@@ -226,6 +230,7 @@ function detailFollowup(field) {
                             session.send(prompts.generalError);
                         } else {
                             var result = JSON.parse(body);
+                            console.log(result);
                             if(result.reasonList && result.reasonList.length > 0) {
                                 var reply = 'Here are the top 3 reasons for efficiency losses:\n';
                                 for(var i in result.reasonList) {
