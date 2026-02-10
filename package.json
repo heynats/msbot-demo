@@ -26,7 +26,7 @@
   "homepage": "https://github.com/istanleyy/msbot-demo",
   "dependencies": {
     "botbuilder": "^1.0.0",
-    "botkit": "^0.2.0",
+    "botkit": "^4.0.0",
     "restify": "^4.1.0"
   }
 }
